@@ -1,13 +1,6 @@
 version: "2"
 
 # set CUSTOM_NETWORK_NAME to the name of the custom Docker network
-networks:
-  front:
-    driver: overlay
-  back:
-    driver: overlay
-
-
 services:
 
   elasticsearch:
@@ -15,7 +8,7 @@ services:
     restart: always
     image: elasticsearch:2.1.1
     networks:
-    - back
+      - ${CUSTOM_NETWORK_NAME}
     environment:
       - "constraint:tier==private"
     command: elasticsearch -Des.network.host=0.0.0.0
@@ -29,8 +22,7 @@ services:
     restart: always
     image: accenture/adop-logstash:0.1.0
     networks:
-    - front
-    - back
+      - ${CUSTOM_NETWORK_NAME}
     environment:
       - "constraint:tier==public"
       - LS_HEAP_SIZE=1024m
@@ -44,8 +36,7 @@ services:
     restart: always
     image: kibana:4.3.1
     networks:
-    - back
-    - front
+      - ${CUSTOM_NETWORK_NAME}
     command: kibana
     environment:
       - "constraint:tier==private"
