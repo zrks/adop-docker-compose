@@ -16,6 +16,8 @@ services:
     image: elasticsearch:2.1.1
     networks:
     - back
+    environment:
+      - "constraint:tier==private"
     command: elasticsearch -Des.network.host=0.0.0.0
     ports:
       - "9200:9200"
@@ -46,6 +48,7 @@ services:
     - front
     command: kibana
     environment:
+      - "constraint:tier==private"
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     ports:
       - "5601:5601"
