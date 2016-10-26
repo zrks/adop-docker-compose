@@ -87,6 +87,9 @@ else
 	
 	PASSWORD_GERRIT=$(createPassword)
 	sed -i'' -e "s/###PASSWORD_GERRIT_PLAIN###/$PASSWORD_GERRIT/g" platform.secrets.sh
+
+	PASSWORD_GITLAB=$(createPassword)
+	sed -i'' -e "s/###PASSWORD_GITLAB_PLAIN###/$PASSWORD_GITLAB/g" platform.secrets.sh
 	
 	PASSWORD_SQL=$(createPassword)
 	sed -i'' -e "s/###PASSWORD_SQL_PLAIN###/$PASSWORD_SQL/g" platform.secrets.sh

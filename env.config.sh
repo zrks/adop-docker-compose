@@ -31,6 +31,9 @@ export GERRIT_USER_EMAIL="gerrit@adop"
 # Gerrit and Jenkins
 export GERRIT_JENKINS_USERNAME="jenkins"
 
+# Gerrit
+export GITLAB_ROOT_PASSWORD=${PASSWORD_GITLAB}
+
 # Sonar MySQL
 
 export SONAR_MYSQL_USER="sonar"
