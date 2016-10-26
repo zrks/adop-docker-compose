@@ -341,7 +341,7 @@ services:
   nexus:
     container_name: nexus
     restart: always
-    image: avsdeveng/adop-nexus
+    image: avsdeveng/adop-nexus:0.0.1
     networks:
       - adopnetwork
     expose:
