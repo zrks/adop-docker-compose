@@ -165,6 +165,8 @@ services:
       - "5671"
       - "15672"
       - "15671"
+    environment:
+      - "constraint:tier==private"
 
   sensu-redis:
     container_name: sensu-redis
