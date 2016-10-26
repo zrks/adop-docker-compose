@@ -376,7 +376,7 @@ services:
   ldap-phpadmin:
     container_name: ldap-phpadmin
     restart: always
-    image: avsdeveng/adop-ldap-phpadmin
+    image: avsdeveng/adop-ldap-phpadmin:0.0.1
     networks:
       - adopnetwork
     expose:
