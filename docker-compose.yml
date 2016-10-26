@@ -4,6 +4,11 @@ version: "2"
 # set TARGET_HOST to dns/ip of proxy
 # set LOGSTASH_HOST to dns/ip of logstash host
 
+networks:
+  adopnetwork:
+    external:
+      name: ${CUSTOM_NETWORK_NAME}
+
 services:
   proxy:
     container_name: proxy
@@ -11,7 +16,7 @@ services:
     image: avsdeveng/adop-proxy:0.0.1
     #    build: ./adop-nginx/
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     ports:
       - "80:80"
       - "443:443"
@@ -31,7 +36,7 @@ services:
     #build: ../images/docker-ldap/
     image: avsdeveng/adop-ldap:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "389"
     environment:
@@ -50,7 +55,7 @@ services:
     restart: always
     image: mysql:5.6.25
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "3306"
     environment:
@@ -65,7 +70,7 @@ services:
     restart: always
     image: avsdeveng/adop-gitlab:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     ports:
       - "9080:9080"
       - "9443:443"
@@ -99,7 +104,7 @@ services:
     restart: always
     image: avsdeveng/adop-uchiwa:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     environment:
       - "constraint:tier==private"
       - "SENSU_HOSTNAME=sensu-api"
@@ -112,7 +117,7 @@ services:
     restart: always
     image: accenture/adop-sensu:0.1.0
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     command: api
     expose:
       - "4567"
@@ -126,7 +131,7 @@ services:
     restart: always
     image: accenture/adop-sensu:0.1.0
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     command: server
     environment:
       - "constraint:tier==private"
@@ -140,7 +145,7 @@ services:
     restart: always
     image: accenture/adop-sensu:0.1.0
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     command: client
     environment:
       - "constraint:tier==private"
@@ -154,7 +159,7 @@ services:
     restart: always
     image: avsdeveng/adop-rabbitmq:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "5672"
       - "5671"
@@ -166,7 +171,7 @@ services:
     restart: always
     image: avsdeveng/adop-redis:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "6379"
     environment:
@@ -177,7 +182,7 @@ services:
     restart: always
     image: avsdeveng/adop-redis:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "3306"
     environment:
@@ -193,7 +198,7 @@ services:
     image: avsdeveng/adop-sonar:0.0.1
     #build: ../images/docker-sonar/
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "9000"
     environment:
@@ -218,7 +223,7 @@ services:
     image: avsdeveng/adop-jenkins:0.0.1
     #build: ../images/docker-jenkins/
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "8080"
       - "50000"
@@ -267,14 +272,14 @@ services:
       - "DOCKER_TLS_VERIFY=${DOCKER_TLS_VERIFY}"
       - "DOCKER_HOST=${DOCKER_HOST}"
       - "DOCKER_CLIENT_CERT_PATH=${DOCKER_CLIENT_CERT_PATH}"
-      - "DOCKER_NETWORK_NAME=${CUSTOM_NETWORK_NAME}"
+      - "DOCKER_NETWORK_NAME=adopnetwork"
 
   jenkins-slave:
     container_name: jenkins-slave
     restart: always
     image: avsdeveng/adop-jenkins-slave:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     privileged: true
     environment:
       - "constraint:tier==private"
@@ -289,7 +294,7 @@ services:
     restart: always
     image: avsdeveng/hub:2.53.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
     - "4444"
     ports:
@@ -306,7 +311,7 @@ services:
     depends_on:
     - selenium-hub
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     environment:
       #SE_OPTS: "-nodeConfig /var/selenium-config/config-chrome.json"
       - "constraint:tier==private"
@@ -326,7 +331,7 @@ services:
     depends_on:
     - selenium-hub
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     environment:
       #SE_OPTS: "-nodeConfig /var/selenium-config/config-firefox.json"
       - "constraint:tier==private"
@@ -338,7 +343,7 @@ services:
     restart: always
     image: avsdeveng/adop-nexus
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "8081"
     environment:
@@ -358,7 +363,7 @@ services:
     restart: always
     image: avsdeveng/adop-ldap-ltb:0.0.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "80"
     environment:
@@ -373,7 +378,7 @@ services:
     restart: always
     image: avsdeveng/adop-ldap-phpadmin
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     expose:
       - "80"
     environment:

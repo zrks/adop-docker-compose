@@ -1,6 +1,11 @@
 version: "2"
 
 # set CUSTOM_NETWORK_NAME to the name of the custom Docker network
+networks:
+  adopnetwork:
+    external:
+      name: ${CUSTOM_NETWORK_NAME}
+
 services:
 
   elasticsearch:
@@ -8,7 +13,7 @@ services:
     restart: always
     image: elasticsearch:2.1.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     environment:
       - "constraint:tier==private"
     command: elasticsearch -Des.network.host=0.0.0.0
@@ -22,7 +27,7 @@ services:
     restart: always
     image: accenture/adop-logstash:0.1.0
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     environment:
       - "constraint:tier==public"
       - LS_HEAP_SIZE=1024m
@@ -36,7 +41,7 @@ services:
     restart: always
     image: kibana:4.3.1
     networks:
-      - ${CUSTOM_NETWORK_NAME}
+      - adopnetwork
     command: kibana
     environment:
       - "constraint:tier==private"
