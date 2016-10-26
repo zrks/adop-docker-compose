@@ -13,13 +13,22 @@ services:
   proxy:
     container_name: proxy
     restart: always
-    image: avsdeveng/adop-proxy:0.0.1
+    image: avsdeveng/nginx:0.0.1
     #    build: ./adop-nginx/
     networks:
       - adopnetwork
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - gitlab
+      - jenkins
+      - sonar
+      - nexus
+      - ldap
+      - sensu-uchiwa
+      - ldap-ltb
+      - ldap-phpadmin
     environment:
       - "constraint:tier==public"
       - "LDAP_SERVER=${LDAP_SERVER}"
@@ -199,6 +208,8 @@ services:
     restart: always
     image: avsdeveng/adop-sonar:0.0.1
     #build: ../images/docker-sonar/
+    depends_on:
+      - sonar-mysql
     networks:
       - adopnetwork
     expose:
@@ -222,7 +233,7 @@ services:
   jenkins:
     container_name: jenkins
     restart: always
-    image: avsdeveng/adop-jenkins:0.0.1
+    image: avsdeveng/jenkins:0.2.0
     #build: ../images/docker-jenkins/
     networks:
       - adopnetwork
@@ -232,6 +243,7 @@ services:
     privileged: true
     environment:
       - "constraint:tier==private"
+      - "ADOP_GERRIT_ENABLED=false"
       - "ADOP_PLATFORM_MANAGEMENT_VERSION=0.1.1"
       - "JENKINS_OPTS=--prefix=/jenkins"
       - "ROOT_URL=${PROTO}://${TARGET_HOST}/jenkins/"
@@ -251,10 +263,6 @@ services:
       - "LDAP_GROUP_NAME_ADMIN=${LDAP_GROUP_NAME_ADMIN}"
       - "INITIAL_ADMIN_USER=${INITIAL_ADMIN_USER}"
       - "INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD_PLAIN}"
-      - "GERRIT_HOST_NAME=gerrit"
-      - "GERRIT_FRONT_END_URL=http://gerrit:8080/gerrit"
-      - "GERRIT_JENKINS_USERNAME=${GERRIT_JENKINS_USERNAME}"
-      - "GERRIT_JENKINS_PASSWORD=${PASSWORD_JENKINS}"
       - "SONAR_SERVER_URL=http://sonar:9000/sonar/"
       - "SONAR_ACCOUNT_LOGIN=${SONAR_ACCOUNT_LOGIN}"
       - "SONAR_ACCOUNT_PASSWORD=${PASSWORD_JENKINS}"
@@ -294,7 +302,7 @@ services:
   selenium-hub:
     container_name: selenium-hub
     restart: always
-    image: avsdeveng/hub:2.53.1
+    image: avsdeveng/selenium-hub:0.0.2
     networks:
       - adopnetwork
     expose:
@@ -307,8 +315,23 @@ services:
   selenium-node-chrome:
     container_name: selenium-node-chrome
     restart: always
-    #image: avsdeveng/node-chrome:2.53.1
-    image: avsdeveng/node-chrome-debug:2.53.1
+    image: avsdeveng/selenium-node-chrome:0.0.2
+    shm_size: 4g
+    depends_on:
+    - selenium-hub
+    networks:
+      - adopnetwork
+    environment:
+      #SE_OPTS: "-nodeConfig /var/selenium-config/config-chrome.json"
+      - "constraint:tier==private"
+      - "DBUS_SESSION_BUS_ADDRESS=/dev/null"
+      - "HUB_PORT_4444_TCP_ADDR=selenium-hub"
+      - "HUB_PORT_4444_TCP_PORT=4444"
+  
+  selenium-node-chrome-debug:
+    container_name: selenium-node-chrome-debug
+    restart: always
+    image: avsdeveng/selenium-node-chrome-debug:0.0.2
     shm_size: 4g
     depends_on:
     - selenium-hub
@@ -324,12 +347,11 @@ services:
     - "5900"
     ports:
     - "5900:5900"
-      #comment expose if it's not debug image
 
   selenium-node-firefox:
     container_name: selenium-node-firefox
     restart: always
-    image: avsdeveng/node-firefox:2.53.1
+    image: avsdeveng/selenium-node-firefox:0.0.2
     depends_on:
     - selenium-hub
     networks:
