@@ -1,66 +1,64 @@
-proxy:
-  volumes:
-    - /data/nginx_config:/etc/nginx
-    - /data/nginx_releasenote:/usr/share/nginx/html
+---
+version: "2"
 
-ldap:
-  volumes:
-    - /data/ldap_db:/var/lib/ldap
-    - /data/ldap_static:/etc/ldap
+services:
+  proxy:
+    volumes:
+      - /data/nginx_config:/etc/nginx
+      - /data/nginx_releasenote:/usr/share/nginx/html
 
-gerrit-mysql:
-  volumes:
-    - /data/gerrit_mysql_data:/var/lib/mysql
+  ldap:
+    volumes:
+      - /data/ldap_db:/var/lib/ldap
+      - /data/ldap_static:/etc/ldap
 
-gerrit:
-  user: root
-  volumes:
-    - /data/git_repos:/var/git/repos 
-    - /data/gerrit_review_site:/var/gerrit/review_site 
+  gerrit-mysql:
+    volumes:
+      - /data/gerrit_mysql_data:/var/lib/mysql
 
-sensu-api:
-  volumes:
-    - /data/sensu_api_conf:/etc/sensu/conf.d
+  sensu-api:
+    volumes:
+      - /data/sensu_api_conf:/etc/sensu/conf.d
 
-sensu-server:
-  volumes:
-    - /data/sensu_server_conf:/etc/sensu/conf.d
+  sensu-server:
+    volumes:
+      - /data/sensu_server_conf:/etc/sensu/conf.d
 
-sensu-client:
-  volumes:
-    - /data/sensu_client_conf:/etc/sensu/conf.d
+  sensu-client:
+    volumes:
+      - /data/sensu_client_conf:/etc/sensu/conf.d
 
-sensu-rabbitmq:
-  volumes:
-    - /data/sensu_rabbitmq_data:/var/lib/rabbitmq
+  sensu-rabbitmq:
+    volumes:
+      - /data/sensu_rabbitmq_data:/var/lib/rabbitmq
 
-sensu-redis:
-  volumes:
-    - /data/sensu_redis_data:/data
+  sensu-redis:
+    volumes:
+      - /data/sensu_redis_data:/data
 
-sonar-mysql:
-  volumes:
-    - /data/sonar_mysql_data:/var/lib/mysql 
+  sonar-mysql:
+    volumes:
+      - /data/sonar_mysql_data:/var/lib/mysql 
 
-sonar:
-  volumes:
-    - /data/sonar_data:/opt/sonarqube/data
-    - /data/sonar_extensions:/opt/sonarqube/extensions
-    - /data/sonar_logs:/opt/sonarqube/logs
+  sonar:
+    volumes:
+      - /data/sonar_data:/opt/sonarqube/data
+      - /data/sonar_extensions:/opt/sonarqube/extensions
+      - /data/sonar_logs:/opt/sonarqube/logs
 
-jenkins:
-  user: root 
-  volumes:
-    - /data/jenkins_home:/var/jenkins_home 
+  jenkins:
+    user: root 
+    volumes:
+      - /data/jenkins_home:/var/jenkins_home 
 
-selenium-node-chrome:
-  volumes:
-    - /data/selenium_config:/var/selenium-config
+  selenium-node-chrome:
+    volumes:
+      - /data/selenium_config:/var/selenium-config
 
-selenium-node-firefox:
-  volumes:
-    - /data/selenium_config:/var/selenium-config
+  selenium-node-firefox:
+    volumes:
+      - /data/selenium_config:/var/selenium-config
 
-nexus:
-  volumes:
-    - /data/nexus_sonatype_work:/sonatype-work
+  nexus:
+    volumes:
+      - /data/nexus_sonatype_work:/sonatype-work
