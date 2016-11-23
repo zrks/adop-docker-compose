@@ -113,6 +113,7 @@ services:
        external_url 'http://${TARGET_HOST}/gitlab'
        gitlab_rails['ldap_enabled'] = true
        gitlab_rails['ldap_servers'] = YAML.load <<-'EOS'
+       gitlab_rails['gitlab_default_can_create_group'] = false
          main:
            label: 'LDAP'
            host: ldap
